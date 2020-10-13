@@ -18,43 +18,43 @@ class block{
     //TLJSZIO
 };
 
-void block::sort_T(int n){
+void sort_T(int n){
   if(n == 1) { blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[2][2] = 1; blockbroad[3][1] = 1;}
   if(n == 2) { blockbroad[1][1] = 1; blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[3][1] = 1;}
   if(n == 3) { blockbroad[2][1] = 1; blockbroad[3][0] = 1; blockbroad[3][1] = 1; blockbroad[3][2] = 1;}
   if(n == 4) { blockbroad[1][0] = 1; blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[3][0] = 1;}
 }
 
-void block::sort_L(int n){
+void sort_L(int n){
   if(n == 1) { blockbroad[1][0] = 1; blockbroad[2][0] = 1; blockbroad[3][0] = 1; blockbroad[3][1] = 1;}
   if(n == 2) { blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[2][2] = 1; blockbroad[3][0] = 1;}
   if(n == 3) { blockbroad[1][0] = 1; blockbroad[1][1] = 1; blockbroad[2][1] = 1; blockbroad[3][1] = 1;}
-  if(n == 4) { blockbroad[2][0] = 1; blockbroad[3][1] = 1; blockbroad[3][2] = 1; blockbroad[2][2] = 1;}
+  if(n == 4) { blockbroad[2][2] = 1; blockbroad[3][0] = 1; blockbroad[3][1] = 1; blockbroad[3][2] = 1;}
 }
 
-void block::sort_J(int n){
+void sort_J(int n){
   if(n == 1) { blockbroad[3][0] = 1; blockbroad[3][1] = 1; blockbroad[2][1] = 1; blockbroad[1][1] = 1;}
-  if(n == 2) { blockbroad[1][1] = 1; blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[3][1] = 1;}
-  if(n == 3) { blockbroad[2][0] = 1; blockbroad[3][0] = 1; blockbroad[3][1] = 1; blockbroad[3][2] = 1;}
+  if(n == 2) { blockbroad[2][0] = 1; blockbroad[3][0] = 1; blockbroad[3][1] = 1; blockbroad[3][2] = 1;}
+  if(n == 3) { blockbroad[1][0] = 1; blockbroad[1][1] = 1; blockbroad[2][0] = 1; blockbroad[3][0] = 1;}
   if(n == 4) { blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[2][2] = 1; blockbroad[3][2] = 1;}
 }
 
-void block::sort_S(int n){
+void sort_S(int n){
   if(n == 1) { blockbroad[2][1] = 1; blockbroad[2][2] = 1; blockbroad[3][0] = 1; blockbroad[3][1] = 1;}
-  if(n == 2) { blockbroad[1][0] = 1; blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[3][2] = 1;}
+  if(n == 2) { blockbroad[1][0] = 1; blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[3][1] = 1;}
 }
 
-void block::sort_Z(int n){
+void sort_Z(int n){
   if(n == 1) { blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[3][1] = 1; blockbroad[3][2] = 1;}
-  if(n == 2) { blockbroad[1][1] = 1; blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[3][1] = 1;}
+  if(n == 2) { blockbroad[1][1] = 1; blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[3][0] = 1;}
 }
 
-void block::sort_I(int n){
+void sort_I(int n){
   if(n == 1) { blockbroad[0][0] = 1; blockbroad[1][0] = 1; blockbroad[2][0] = 1; blockbroad[3][0] = 1;}
   if(n == 2) { blockbroad[3][0] = 1; blockbroad[3][1] = 1; blockbroad[3][2] = 1; blockbroad[3][3] = 1;}
 }
 
-void block::sort_O(){
+void sort_O(){
   blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[3][0] = 1; blockbroad[3][1] = 1;
 }
 
@@ -91,10 +91,14 @@ int main (int argc, char *argv[]){
   int j = 1;
   while(command[j][0]!='E'){
     char ch = command[j][0];
+    for(int i = 0; i < 4; i++){
+      for(int j = 0; j < 4;j++){
+        blockbroad[i][j] = 0;
+      }
+    }
     if(ch == 'O'){
       sort_O();
     } else if(ch == 'T'){
-      printf("%d\n", command[j][1] - '0');
       sort_T(command[j][1] - '0');
     } else if(ch == 'L'){
       sort_L(command[j][1] - '0');
@@ -108,7 +112,7 @@ int main (int argc, char *argv[]){
       sort_I(command[j][1] - '0');
     }
     for(int i = 0; i < 4; i++){
-      for(int i = 0; i < 4; i++){
+      for(int j = 0; j < 4; j++){
         printf("%d ", blockbroad[i][j]);
       }
       printf("\n");
