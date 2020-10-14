@@ -5,6 +5,7 @@ using namespace std;
 
 int ** gamebroad;
 int blockbroad[4][4] = {0};
+char command[1000][100];
 
 class block{
   public:
@@ -58,30 +59,30 @@ void sort_O(){
   blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[3][0] = 1; blockbroad[3][1] = 1;
 }
 
-int main (int argc, char *argv[]){
-  if (!argc) {
-    printf("usage: .exe filename\n");
-    exit(-1);
-  }
+void fall(int start_col, int move){
+  printf("%d %d\n", start_col, move);
+}
 
-  //read the file
+void play(char ch, int sort_num, int start_col, int move){
+  if(ch == 'O'){
+      sort_O();
+    } else if(ch == 'T'){
+      sort_T(sort_num);
+    } else if(ch == 'L'){
+      sort_L(sort_num);
+    } else if(ch == 'J'){
+      sort_J(sort_num);
+    } else if(ch == 'S'){
+      sort_S(sort_num);
+    } else if(ch == 'Z'){
+      sort_Z(sort_num);
+    } else if(ch == 'I'){
+      sort_I(sort_num);
+    }
+    fall(start_col, move);
+}
 
-  ifstream fin;
-  char line[100];
-  char command[1000][100];
-  fin.open(argv[1], ios::in);
-  if(!fin){
-    cout <<"Fail to open file: " << argv[1]<<endl;
-  }
-  //cout<<"File Descriptor: "<<fin<<endl;
-  int cnt = 0;
-  while(fin.getline(line, sizeof(line), '\n')){
-      strcpy(command[cnt++], line);
-      // cout << command[i-1] << endl;
-  }
-  fin.close();
-
-  //judge
+void start(){
   int row = command[0][0] - '0', col = command[0][2] - '0';
   gamebroad = new int*[row];
   for(int i = 0; i < row; i++){
@@ -97,31 +98,43 @@ int main (int argc, char *argv[]){
       }
     }
     if(ch == 'O'){
-      sort_O();
-    } else if(ch == 'T'){
-      sort_T(command[j][1] - '0');
-    } else if(ch == 'L'){
-      sort_L(command[j][1] - '0');
-    } else if(ch == 'J'){
-      sort_J(command[j][1] - '0');
-    } else if(ch == 'S'){
-      sort_S(command[j][1] - '0');
-    } else if(ch == 'Z'){
-      sort_Z(command[j][1] - '0');
-    } else if(ch == 'I'){
-      sort_I(command[j][1] - '0');
+      int move = command[j][4] - '0';
+      if(command[j][4] == '-')  move = - (command[j][5] - '0');
+      play(ch, 0, command[j][2] - '0', move);
+    } else {
+      int move = command[j][5] - '0';
+      if(command[j][5] == '-')  move = - (command[j][6] - '0');
+      play(ch, command[j][1] - '0', command[j][3] - '0', move);
     }
-    for(int i = 0; i < 4; i++){
-      for(int j = 0; j < 4; j++){
-        printf("%d ", blockbroad[i][j]);
-      }
-      printf("\n");
-    } 
-    printf("\n");
     j++;
   }
-  //TLJSZIO
+}
+
+int main (int argc, char *argv[]){
+  if (!argc) {
+    printf("usage: .exe filename\n");
+    exit(-1);
+  }
+
+  //read the file
+
+  ifstream fin;
+  char line[100];
   
+  fin.open(argv[1], ios::in);
+  if(!fin){
+    cout <<"Fail to open file: " << argv[1]<<endl;
+  }
+  //cout<<"File Descriptor: "<<fin<<endl;
+  int cnt = 0;
+  while(fin.getline(line, sizeof(line), '\n')){
+      strcpy(command[cnt++], line);
+      // cout << command[i-1] << endl;
+  }
+  fin.close();
+
+  start();
+
   //ouput the file
 
   ofstream fout;
@@ -130,7 +143,11 @@ int main (int argc, char *argv[]){
 	  cout << "Fail to open file: " << "10707004_proj1.final" << endl;
   }
   //cout<<"File Descriptor: "<<fout<<endl;
-  fout << "ans" << endl; //寫入字串
+  for(int i = 0; i < command[0][0]; i++){
+    for(int j = 0; j < command[0][2] - 1; j++)
+      fout << blockbroad[i][j] << " "; //寫入字串
+    fout << blockbroad[i][command[0][2] - 1] << '\n';
+  }
   fout.close();
 
   return 0;
