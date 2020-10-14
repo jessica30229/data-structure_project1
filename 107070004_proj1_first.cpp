@@ -143,10 +143,10 @@ int main (int argc, char *argv[]){
 	  cout << "Fail to open file: " << "10707004_proj1.final" << endl;
   }
   //cout<<"File Descriptor: "<<fout<<endl;
-  for(int i = 0; i < command[0][0]; i++){
-    for(int j = 0; j < command[0][2] - 1; j++)
-      fout << blockbroad[i][j] << " "; //寫入字串
-    fout << blockbroad[i][command[0][2] - 1] << '\n';
+  for(int i = 0; i < command[0][0] - '0'; i++){
+    for(int j = 0; j < command[0][2] -'0' - 1; j++)
+      fout << gamebroad[i][j] << " "; //寫入字串
+    fout << gamebroad[i][command[0][2] -'0' - 1] << '\n';
   }
   fout.close();
 
