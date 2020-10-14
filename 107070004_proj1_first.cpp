@@ -78,8 +78,7 @@ bool fall(int start_col, int move){
   //  printf("d1\n"); 
    for(int j = start_col; j < start_col + 4; j++){
     // printf("%d\n" , gamebroad[i][j]);
-    if(blockbroad[3][j - start_col] && gamebroad[i][j] && ok) {} // means hit.
-      return true;
+    if(blockbroad[3][j - start_col] && gamebroad[i][j] && ok) {return true;} // means hit.
       // ok = 0;
       // update_gameboard(start_col + move, i - 1);
     else if(blockbroad[2][j - start_col] && gamebroad[i - 1][j] && ok){}
