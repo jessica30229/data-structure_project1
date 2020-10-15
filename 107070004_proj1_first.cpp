@@ -6,18 +6,19 @@ using namespace std;
 int ** gamebroad;
 int blockbroad[4][4] = {0};
 char command[1000][100];
+int now_row;
 
-class block{
-  public:
-    void sort_T(int n);
-    void sort_L(int n);
-    void sort_J(int n);
-    void sort_S(int n);
-    void sort_Z(int n);
-    void sort_I(int n);
-    void sort_O();
-    //TLJSZIO
-};
+// class block{
+//   public:
+//     void sort_T(int n);
+//     void sort_L(int n);
+//     void sort_J(int n);
+//     void sort_S(int n);
+//     void sort_Z(int n);
+//     void sort_I(int n);
+//     void sort_O();
+//     //TLJSZIO
+// };
 
 void sort_T(int n){
   if(n == 1) { blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[2][2] = 1; blockbroad[3][1] = 1;}
@@ -64,7 +65,7 @@ void deleterow(){
 }
 
 void update_gameboard(int stop_col, int stop_row){
-  printf("update_gameboard\n");
+  // printf("update_gameboard\n");
   for(int i = stop_row; i > stop_row - 4; i--){
     for(int j = stop_col; j < stop_col + 4; j++){
       gamebroad[i][j] = blockbroad[i - stop_row + 3][j - stop_col];
@@ -72,26 +73,20 @@ void update_gameboard(int stop_col, int stop_row){
   }
 }
 
-bool fall(int start_col, int move){
-  int ok = 1;
-  for(int i = 0; i < command[0][0] - '0'; i++){ //8
-  //  printf("d1\n"); 
-   for(int j = start_col; j < start_col + 4; j++){
-    // printf("%d\n" , gamebroad[i][j]);
-    if(blockbroad[3][j - start_col] && gamebroad[i][j] && ok) {return true;} // means hit.
-      // ok = 0;
-      // update_gameboard(start_col + move, i - 1);
-    else if(blockbroad[2][j - start_col] && gamebroad[i - 1][j] && ok){}
-
-    else if(blockbroad[1][j - start_col] && gamebroad[i - 2][j] && ok){}
-
-    else if(blockbroad[0][j - start_col] && gamebroad[i - 3][j] && ok){}
-
-    printf("d2\n");
-   }
+bool fall(int start_col, int move){ //assume only valid testcase.(ver2)
+  for(int i = 3; i >= 0; i--){
+    for(int j = 3; j >= 0; i--){
+      if(blockbroad[i][j]){
+        int now_col = start_col + j;
+        int next_row = now_row - (3-i) + 1;
+        if(next_row >= 0){
+          // if(gamebroad[next_row][col]) cout << "illegal\n";
+          gamebroad[next_row][now_col] = 1;
+        }
+      }
+    }
   }
-  printf("ok = %d\n", ok);
-  if(ok) update_gameboard(start_col + move, 0);
+  now_row++;
 }
 
 void play(char ch, int sort_num, int start_col, int move){
@@ -110,7 +105,8 @@ void play(char ch, int sort_num, int start_col, int move){
   } else if(ch == 'I'){
     sort_I(sort_num);
   }
-  printf("play\n");
+  // printf("play\n");
+  now_row = -1;
   fall(start_col, move);
 }
 
@@ -168,12 +164,13 @@ int main (int argc, char *argv[]){
   fin.close();
 
   if((command[0][0] - '0') > 15 || (command[0][2] - '0') > 40){
-    printf("invalid testcase.\n");
+    //printf("invalid testcase.\n");
   }
   if(cnt - 1 > 1000){
-    printf("invalid testcase.\n");
+    //printf("invalid testcase.\n");
   }else{
     // printf("ok\n");
+    now_row = -1;
     start();
   }
 
