@@ -5,61 +5,158 @@
 using namespace std;
 
 int ** gamebroad;
-int blockbroad[4][4] = {0};
 char command[1000][100];
 int row, col;
 
-// class block{
-//   public:
-//     void sort_T(int n);
-//     void sort_L(int n);
-//     void sort_J(int n);
-//     void sort_S(int n);
-//     void sort_Z(int n);
-//     void sort_I(int n);
-//     void sort_O();
-//     //TLJSZIO
-// };
+//TLJSZIO
 
-void sort_T(int n){
-  if(n == 1) { blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[2][2] = 1; blockbroad[3][1] = 1;}
-  if(n == 2) { blockbroad[1][1] = 1; blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[3][1] = 1;}
-  if(n == 3) { blockbroad[2][1] = 1; blockbroad[3][0] = 1; blockbroad[3][1] = 1; blockbroad[3][2] = 1;}
-  if(n == 4) { blockbroad[1][0] = 1; blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[3][0] = 1;}
-}
+int T[4][4][4] = { 
+  {
+    { 0, 0, 0, 0 },
+    { 0, 0, 0, 0 },  
+    { 1, 1, 1, 0 },
+    { 0, 1, 0, 0 },
+  },
+  { 
+    { 0, 0, 0, 0 },
+    { 0, 1, 0, 0 },  
+    { 1, 1, 0, 0 },
+    { 0, 1, 0, 0 },
+  },
+  { 
+    { 0, 0, 0, 0 },
+    { 0, 0, 0, 0 },  
+    { 0, 1, 0, 0 },
+    { 1, 1, 1, 0 },
+  },
+  { 
+    { 0, 0, 0, 0 },
+    { 1, 0, 0, 0 },  
+    { 1, 1, 0, 0 },
+    { 1, 0, 0, 0 },
+  }
+};
+int Th[4] = { 2, 3, 2, 3};
+int Tw[4] = { 3, 2, 3, 2};
 
-void sort_L(int n){
-  if(n == 1) { blockbroad[1][0] = 1; blockbroad[2][0] = 1; blockbroad[3][0] = 1; blockbroad[3][1] = 1;}
-  if(n == 2) { blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[2][2] = 1; blockbroad[3][0] = 1;}
-  if(n == 3) { blockbroad[1][0] = 1; blockbroad[1][1] = 1; blockbroad[2][1] = 1; blockbroad[3][1] = 1;}
-  if(n == 4) { blockbroad[2][2] = 1; blockbroad[3][0] = 1; blockbroad[3][1] = 1; blockbroad[3][2] = 1;}
-}
+int L[4][4][4] = {
+  {
+    0, 0, 0, 0,
+    1, 0, 0, 0,  
+    1, 0, 0, 0,
+    1, 1, 0, 0,
+  },
+  {
+    0, 0, 0, 0,
+    0, 0, 0, 0,  
+    1, 1, 1, 0,
+    1, 0, 0, 0,
+  },
+  {
+    0, 0, 0, 0,
+    1, 1, 0, 0,  
+    0, 1, 0, 0,
+    0, 1, 0, 0,
+  },
+  {
+    0, 0, 0, 0,
+    0, 0, 0, 0,  
+    0, 0, 1, 0,
+    1, 1, 1, 0,
+  },
+};
+int Lh[4] = { 3, 2, 3, 2};
+int Lw[4] = { 2, 3, 2, 3};
 
-void sort_J(int n){
-  if(n == 1) { blockbroad[3][0] = 1; blockbroad[3][1] = 1; blockbroad[2][1] = 1; blockbroad[1][1] = 1;}
-  if(n == 2) { blockbroad[2][0] = 1; blockbroad[3][0] = 1; blockbroad[3][1] = 1; blockbroad[3][2] = 1;}
-  if(n == 3) { blockbroad[1][0] = 1; blockbroad[1][1] = 1; blockbroad[2][0] = 1; blockbroad[3][0] = 1;}
-  if(n == 4) { blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[2][2] = 1; blockbroad[3][2] = 1;}
-}
+int J[4][4][4] = { 
+  {
+    0, 0, 0, 0,
+    0, 1, 0, 0,  
+    0, 1, 0, 0,
+    1, 1, 0, 0,
+  },
+  {
+    0, 0, 0, 0,
+    0, 0, 0, 0,  
+    1, 0, 0, 0,
+    1, 1, 1, 0,
+  },
+  {
+    0, 0, 0, 0,
+    1, 1, 0, 0,  
+    1, 0, 0, 0,
+    1, 0, 0, 0,
+  },
+  {
+    0, 0, 0, 0,
+    0, 0, 0, 0,  
+    1, 1, 1, 0,
+    0, 0, 1, 0,
+  },
+};
+int Jh[4] = { 3, 2, 3, 2};
+int Jw[4] = { 2, 3, 2, 3};
 
-void sort_S(int n){
-  if(n == 1) { blockbroad[2][1] = 1; blockbroad[2][2] = 1; blockbroad[3][0] = 1; blockbroad[3][1] = 1;}
-  if(n == 2) { blockbroad[1][0] = 1; blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[3][1] = 1;}
-}
+int S[2][4][4] = { 
+  {
+    0, 0, 0, 0,
+    0, 0, 0, 0,  
+    0, 1, 1, 0,
+    1, 1, 0, 0,
+  },
+  {
+    0, 0, 0, 0,
+    1, 0, 0, 0,  
+    1, 1, 0, 0,
+    0, 1, 0, 0,
+  },
+};
+int Sh[2] = { 2, 3 };
+int Sw[2] = { 3, 2 };
 
-void sort_Z(int n){
-  if(n == 1) { blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[3][1] = 1; blockbroad[3][2] = 1;}
-  if(n == 2) { blockbroad[1][1] = 1; blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[3][0] = 1;}
-}
+int  Z[2][4][4] = { 
+  {
+    0, 0, 0, 0,
+    0, 0, 0, 0,  
+    1, 1, 0, 0,
+    0, 1, 1, 0,
+  },
+  {
+    0, 0, 0, 0,
+    0, 1, 0, 0,  
+    1, 1, 0, 0,
+    1, 0, 0, 0,
+  },
+};
+int Zh[2] = { 2, 3 };
+int Zw[2] = { 3, 2 };
 
-void sort_I(int n){
-  if(n == 1) { blockbroad[0][0] = 1; blockbroad[1][0] = 1; blockbroad[2][0] = 1; blockbroad[3][0] = 1;}
-  if(n == 2) { blockbroad[3][0] = 1; blockbroad[3][1] = 1; blockbroad[3][2] = 1; blockbroad[3][3] = 1;}
-}
+int I[2][4][4] = { 
+  {
+    1, 0, 0, 0,
+    1, 0, 0, 0,  
+    1, 0, 0, 0,
+    1, 0, 0, 0,
+  },
+  {
+    0, 0, 0, 0,
+    0, 0, 0, 0,  
+    0, 0, 0, 0,
+    1, 1, 1, 1,
+  }
+};
+int Ih[2] = { 4, 1 };
+int Iw[2] = { 1, 4 };
 
-void sort_O(){
-  blockbroad[2][0] = 1; blockbroad[2][1] = 1; blockbroad[3][0] = 1; blockbroad[3][1] = 1;
-}
+int O[4][4] = { 
+  0, 0, 0, 0,
+  0, 0, 0, 0,  
+  1, 1, 0, 0,
+  1, 1, 0, 0,
+};
+int Oh[1] = { 2 };
+int Ow[1] = { 2 };
+
 
 void deleterow(){
 
@@ -74,7 +171,7 @@ void update_gameboard(int stop_col, int stop_row){
   }
 }
 
-bool fall(int start_col, int move){ //assume only valid testcase.(ver2)
+void fall(int* block, int w, int h, int start_col, int move){ //assume only valid testcase.(ver2)
 //   for(int i = 3; i >= 0; i--){
 //     for(int j = 3; j >= 0; i--){
 //       if(blockbroad[i][j]){
@@ -91,32 +188,47 @@ bool fall(int start_col, int move){ //assume only valid testcase.(ver2)
 }
 
 void play(char ch, int sort_num, int start_col, int move){
+  int* block;
+  int h, w;
+  
   if(ch == 'O'){
-    sort_O();
-  } else if(ch == 'T'){
-    sort_T(sort_num);
-  } else if(ch == 'L'){
-    sort_L(sort_num);
-  } else if(ch == 'J'){
-    sort_J(sort_num);
-  } else if(ch == 'S'){
-    sort_S(sort_num);
-  } else if(ch == 'Z'){
-    sort_Z(sort_num);
-  } else if(ch == 'I'){
-    sort_I(sort_num);
+    block = (int *) &O;
+    h = Oh[0];
+    w = Ow[0];
+  } else if (ch == 'T'){
+    block = (int*) &T[sort_num-1];
+    h = Th[sort_num-1];
+    w = Tw[sort_num-1];
+  } else if (ch == 'L'){
+    block = (int*) &L[sort_num-1];
+    h = Lh[sort_num-1];
+    w = Lw[sort_num-1];
+  } else if (ch == 'J'){
+    block = (int*) &J[sort_num-1];
+    h = Jh[sort_num-1];
+    w = Jw[sort_num-1];
+  } else if (ch == 'S'){
+    block = (int*) &S[sort_num-1];
+    h = Sh[sort_num-1];
+    w = Sw[sort_num-1];
+  } else if (ch == 'Z'){
+    block = (int*) &Z[sort_num-1];
+    h = Zh[sort_num-1];
+    w = Zw[sort_num-1];
+  } else if (ch == 'I'){
+    block = (int*) &I[sort_num-1];
+    h = Ih[sort_num-1];
+    w = Iw[sort_num-1];
   }
 
-  fall(start_col, move);
+
+  fall(block, w, h, start_col, move);
+  dump();
+  elimiation();
+  dump();
 }
 
 void start(){
-
-  //read row, col
-  stringstream ss(command[0]);
-  ss >> row >> col; // string -> int
-  //cout << "row=" << row << ", col=" << col << endl;
-
   gamebroad = new int*[row];
   for(int i = 0; i < row; i++){
       gamebroad[i] = new int[col]{0};
@@ -169,7 +281,12 @@ int main (int argc, char *argv[]){
   }
   fin.close();
 
-  if((command[0][0] - '0') > 15 || (command[0][2] - '0') > 40){
+  //read row, col
+  stringstream ss(command[0]);
+  ss >> row >> col; // string -> int
+
+  //cout << "row=" << row << ", col=" << col << endl;
+  if(row > 15 || col > 40){
     //printf("invalid testcase.\n");
   }
   if(cnt - 1 > 1000){
@@ -187,10 +304,10 @@ int main (int argc, char *argv[]){
 	  cout << "Fail to open file: " << "10707004_proj1.final" << endl;
   }
   //cout<<"File Descriptor: "<<fout<<endl;
-  for(int i = 0; i < command[0][0] - '0'; i++){
-    for(int j = 0; j < command[0][2] -'0' - 1; j++)
+  for(int i = 0; i < row ; i++){
+    for(int j = 0; j < col - 1; j++)
       fout << gamebroad[i][j] << " "; //write ans to the file
-    fout << gamebroad[i][command[0][2] -'0' - 1] << '\n';
+    fout << gamebroad[i][col - 1] << '\n';
   }
   fout.close();
 
