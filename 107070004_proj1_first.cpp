@@ -234,7 +234,7 @@ void fall(int* block, int w, int h, int start_col, int move) {
         ref_row = cur_row-1;
         break;
       } else {
-        cout << "no space to put block" << endl;
+        cout << "no space to put block (illegal testcase)" << endl;
         return;
       }
     } else if(cur_row == row-1) { // last row
@@ -258,9 +258,9 @@ void fall(int* block, int w, int h, int start_col, int move) {
     for(int i = 1; i < move; i++){
       if(test_collision(block, w, h, ref_col-i, ref_row)) return;
     }
+    ref_col += move;
   }
-  ref_col += move;
-
+  
   // try to move down if can
   while(ref_row<row-1) {
     // try next row
@@ -380,7 +380,7 @@ int main (int argc, char *argv[]) {
   ofstream fout;
   fout.open("107070004_proj1.final", ios::out);
   if(!fout){
-	  cout << "Fail to open file: " << "10707004_proj1.final" << endl;
+	  cout << "Fail to open file: " << "107070004_proj1.final" << endl;
   }
   //cout<<"File Descriptor: "<<fout<<endl;
   for(int i = 0; i < row ; i++){
