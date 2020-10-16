@@ -1,12 +1,13 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string.h>
 using namespace std;
 
 int ** gamebroad;
 int blockbroad[4][4] = {0};
 char command[1000][100];
-int now_row;
+int row, col;
 
 // class block{
 //   public:
@@ -74,19 +75,19 @@ void update_gameboard(int stop_col, int stop_row){
 }
 
 bool fall(int start_col, int move){ //assume only valid testcase.(ver2)
-  for(int i = 3; i >= 0; i--){
-    for(int j = 3; j >= 0; i--){
-      if(blockbroad[i][j]){
-        int now_col = start_col + j;
-        int next_row = now_row - (3-i) + 1;
-        if(next_row >= 0){
-          // if(gamebroad[next_row][col]) cout << "illegal\n";
-          gamebroad[next_row][now_col] = 1;
-        }
-      }
-    }
-  }
-  now_row++;
+//   for(int i = 3; i >= 0; i--){
+//     for(int j = 3; j >= 0; i--){
+//       if(blockbroad[i][j]){
+//         //int now_col = start_col + j;
+//         //int next_row = now_row - (3-i) + 1;
+//         if(next_row >= 0){
+//           // if(gamebroad[next_row][col]) cout << "illegal\n";
+//           //gamebroad[next_row][now_col] = 1;
+//         }
+//       }
+//     }
+//   }
+//   //now_row++;
 }
 
 void play(char ch, int sort_num, int start_col, int move){
@@ -105,38 +106,43 @@ void play(char ch, int sort_num, int start_col, int move){
   } else if(ch == 'I'){
     sort_I(sort_num);
   }
-  // printf("play\n");
-  now_row = -1;
+
   fall(start_col, move);
 }
 
 void start(){
-  int row = command[0][0] - '0', col = command[0][2] - '0';
+
+  //read row, col
+  stringstream ss(command[0]);
+  ss >> row >> col; // string -> int
+  //cout << "row=" << row << ", col=" << col << endl;
+
   gamebroad = new int*[row];
   for(int i = 0; i < row; i++){
       gamebroad[i] = new int[col]{0};
   }
 
-  int j = 1;
-  while(command[j][0]!='E'){
-    char ch = command[j][0];
-    for(int i = 0; i < 4; i++){
-      for(int j = 0; j < 4;j++){
-        blockbroad[i][j] = 0;
-      }
-    }
+  int index = 1;
+  while(1){
+    string sort;
+    int start_col, move;
+    
+    stringstream cmd(command[index]);
+    cmd >> sort >> start_col >> move;
+
+    // for(int i = 0; i < 4; i++){
+    //   for(int j = 0; j < 4;j++){
+    //     blockbroad[i][j] = 0;
+    //   }
+    // }
     // the row and column all start from index 1 and all blocks shall never step out of boundary.
-    if(ch == 'O'){
-      int move = command[j][4] - '0';
-      if(command[j][4] == '-')  move = - (command[j][5] - '0');
-      play(ch, 0, command[j][2] - '0' - 1, move);
-    } else {
-      int move = command[j][5] - '0';
-      if(command[j][5] == '-')  move = - (command[j][6] - '0');
-      play(ch, command[j][1] - '0', command[j][3] - '0' - 1, move);
-    }
-    printf("start\n");
-    j++;
+    
+    if(sort == "End")
+      break;
+    const char* ch = sort.c_str();
+    play(ch[0], ch[1]-'0', start_col, move);
+    //cout << "sort=" << sort << ", start=" << start_col << ", move=" << last_move << endl;
+    index++;
   }
 }
 
@@ -169,8 +175,6 @@ int main (int argc, char *argv[]){
   if(cnt - 1 > 1000){
     //printf("invalid testcase.\n");
   }else{
-    // printf("ok\n");
-    now_row = -1;
     start();
   }
 
@@ -178,14 +182,14 @@ int main (int argc, char *argv[]){
   //ouput the file
 
   ofstream fout;
-  fout.open("10707004_proj1.final", ios::out);
+  fout.open("107070004_proj1.final", ios::out);
   if(!fout){
 	  cout << "Fail to open file: " << "10707004_proj1.final" << endl;
   }
   //cout<<"File Descriptor: "<<fout<<endl;
   for(int i = 0; i < command[0][0] - '0'; i++){
     for(int j = 0; j < command[0][2] -'0' - 1; j++)
-      fout << gamebroad[i][j] << " "; //寫入字串
+      fout << gamebroad[i][j] << " "; //write ans to the file
     fout << gamebroad[i][command[0][2] -'0' - 1] << '\n';
   }
   fout.close();
