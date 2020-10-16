@@ -162,35 +162,41 @@ void deleterow(){
 
 }
 
-void update_gameboard(int stop_col, int stop_row){
-  // printf("update_gameboard\n");
-  for(int i = stop_row; i > stop_row - 4; i--){
-    for(int j = stop_col; j < stop_col + 4; j++){
-      gameboard[i][j] = gameboard[i - stop_row + 3][j - stop_col];
+bool test_collision(int* block, int w, int h, int ref_col, int ref_row) {
+    for(int i = 0; i < h; i++) {
+      int* ptr = &gamebroad[ref_row-i][ref_col];
+      int* bptr = &block[(3-i)*4];
+      for(int j = 0; j < w; j++) {
+        if(bptr[j] && ptr[j]) {
+          return true;
+        }
+      }
+    }
+    return false;
+}
+
+//assume only valid testcase.(ver2)
+ 
+void fall(int* block, int w, int h, int start_col, int move) {
+
+bool collision = false;
+  int ref_row, ref_col;
+
+  int cur_row = h-1;
+  while(cur_row < row) {
+    collision = test_collision(block, w, h, start_col - 1, cur_row);
+    if(collision == true) {
+      
     }
   }
+  cur_row++;
 }
 
-void fall(int* block, int w, int h, int start_col, int move){ //assume only valid testcase.(ver2)
-//   for(int i = 3; i >= 0; i--){
-//     for(int j = 3; j >= 0; i--){
-//       if(blockbroad[i][j]){
-//         //int now_col = start_col + j;
-//         //int next_row = now_row - (3-i) + 1;
-//         if(next_row >= 0){
-//           // if(gamebroad[next_row][col]) cout << "illegal\n";
-//           //gamebroad[next_row][now_col] = 1;
-//         }
-//       }
-//     }
-//   }
-//   //now_row++;
-}
-
-void play(char ch, int sort_num, int start_col, int move){
+void play(char ch, int sort_num, int start_col, int move) {
   int* block;
   int h, w;
   
+  //add (int*) -> cannot convert 'int (*)[4][4]' to 'int*' in assignment
   if(ch == 'O'){
     block = (int *) &O;
     h = Oh[0];
@@ -221,14 +227,13 @@ void play(char ch, int sort_num, int start_col, int move){
     w = Iw[sort_num-1];
   }
 
-
   fall(block, w, h, start_col, move);
   dump();
   elimiation();
   dump();
 }
 
-void start(){
+void start() {
   gamebroad = new int*[row];
   for(int i = 0; i < row; i++){
       gameboard[i] = new int[col]{0};
@@ -258,7 +263,7 @@ void start(){
   }
 }
 
-int main (int argc, char *argv[]){
+int main (int argc, char *argv[]) {
   if (!argc) {
     printf("usage: .exe filename\n");
     exit(-1);
