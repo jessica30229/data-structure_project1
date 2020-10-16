@@ -159,12 +159,44 @@ int Ow[1] = { 2 };
 
 
 void delete_row(){
+  int dest_row = -1;
 
+  for(int i = 0; i < row; i++) {
+    int * ptr = &gameboard[row - i - 1][0];
+    bool full = true;
+    for(int j = 0; j < col; j++) {
+      if(ptr[j] == 0){
+        full = false;
+        break;
+      }
+    }
+  }
+  if(full) {
+    if(dest_row == -1)
+      dest_row = row - i - 1;
+  } else {
+    if(dest_row != -1) {
+      int* dest = &gameboard[dest_row][0];
+      for(int j = 0; j < col; j++){
+        dest[j] = ptr[j];
+      }
+      dest_row--;
+    }
+  }
+
+  // fill rest row
+  while(dest_row>=0) {
+      int* dest = &gamebroad[dest_row][0];    
+      for(int j=0;j<col;j++){
+        dest[j] = 0;
+      }
+      dest_row--;
+  }
 }
 
 bool test_collision(int* block, int w, int h, int ref_col, int ref_row) {
     for(int i = 0; i < h; i++) {
-      int* ptr = &gamebroad[ref_row-i][ref_col];
+      int* ptr = &gameboard[ref_row-i][ref_col];
       int* bptr = &block[(3-i)*4]; //2-array -> 1-array
       for(int j = 0; j < w; j++) {
         if(bptr[j] && ptr[j]) {
@@ -220,6 +252,28 @@ void fall(int* block, int w, int h, int start_col, int move) {
     }
   }
   ref_col += move;
+
+  // try to move down if can
+  while(ref_row<row-1) {
+    // try next row
+    collision = test_collision(block, w, h, ref_col, ref_row+1);
+    if(collision) {
+      break;
+    }
+    // move to next
+    ref_row++;
+  }
+   
+  put_block(block, h, w, ref_col, ref_row);
+}
+
+void put_block(int*block, int h, int w, int ref_col, int ref_row) {
+    for(int i = 0; i < h; i++) {
+      for(int j = 0; j < w; j++) {
+        if(block[(3-i)*4+j])
+          gamebroad[ref_row-i][ref_col+j] = block[(3-i)*4+j]; 
+      }
+    }
 }
 
 void play(char ch, int sort_num, int start_col, int move) {
@@ -228,7 +282,7 @@ void play(char ch, int sort_num, int start_col, int move) {
   
   //add (int*) -> cannot convert 'int (*)[4][4]' to 'int*' in assignment
   if(ch == 'O'){
-    block = (int *) &O;
+    block = (int*) &O;
     h = Oh[0];
     w = Ow[0];
   } else if (ch == 'T'){
@@ -262,7 +316,7 @@ void play(char ch, int sort_num, int start_col, int move) {
 }
 
 void start() {
-  gamebroad = new int*[row];
+  gameboard = new int*[row];
   for(int i = 0; i < row; i++){
       gameboard[i] = new int[col]{0};
   }
