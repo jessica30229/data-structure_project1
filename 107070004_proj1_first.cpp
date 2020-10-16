@@ -4,7 +4,7 @@
 #include <string.h>
 using namespace std;
 
-int ** gamebroad;
+int ** gameboard;
 char command[1000][100];
 int row, col;
 
@@ -166,7 +166,7 @@ void update_gameboard(int stop_col, int stop_row){
   // printf("update_gameboard\n");
   for(int i = stop_row; i > stop_row - 4; i--){
     for(int j = stop_col; j < stop_col + 4; j++){
-      gamebroad[i][j] = blockbroad[i - stop_row + 3][j - stop_col];
+      gameboard[i][j] = gameboard[i - stop_row + 3][j - stop_col];
     }
   }
 }
@@ -231,7 +231,7 @@ void play(char ch, int sort_num, int start_col, int move){
 void start(){
   gamebroad = new int*[row];
   for(int i = 0; i < row; i++){
-      gamebroad[i] = new int[col]{0};
+      gameboard[i] = new int[col]{0};
   }
 
   int index = 1;
@@ -306,8 +306,8 @@ int main (int argc, char *argv[]){
   //cout<<"File Descriptor: "<<fout<<endl;
   for(int i = 0; i < row ; i++){
     for(int j = 0; j < col - 1; j++)
-      fout << gamebroad[i][j] << " "; //write ans to the file
-    fout << gamebroad[i][col - 1] << '\n';
+      fout << gameboard[i][j] << " "; //write ans to the file
+    fout << gameboard[i][col - 1] << '\n';
   }
   fout.close();
 
