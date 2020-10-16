@@ -158,14 +158,14 @@ int Oh[1] = { 2 };
 int Ow[1] = { 2 };
 
 
-void deleterow(){
+void delete_row(){
 
 }
 
 bool test_collision(int* block, int w, int h, int ref_col, int ref_row) {
     for(int i = 0; i < h; i++) {
       int* ptr = &gamebroad[ref_row-i][ref_col];
-      int* bptr = &block[(3-i)*4];
+      int* bptr = &block[(3-i)*4]; //2-array -> 1-array
       for(int j = 0; j < w; j++) {
         if(bptr[j] && ptr[j]) {
           return true;
@@ -179,17 +179,47 @@ bool test_collision(int* block, int w, int h, int ref_col, int ref_row) {
  
 void fall(int* block, int w, int h, int start_col, int move) {
 
-bool collision = false;
+  bool collision = false;
   int ref_row, ref_col;
 
+  //collide
   int cur_row = h-1;
   while(cur_row < row) {
     collision = test_collision(block, w, h, start_col - 1, cur_row);
     if(collision == true) {
-      
+      // put block on cur_row-1
+      if(cur_row >= h) {
+        // valid on cur_row-1
+        ref_col = start_col-1;
+        ref_row = cur_row-1;
+        break;
+      } else {
+        cout << "no space to put block" << endl;
+        return;
+      }
+    } else if(cur_row = =row-1) { // last row
+        // valid on cur_row
+        ref_col = start_col-1;
+        ref_row = cur_row;
+        break;
+    }
+    cur_row++;
+  }
+  
+  //move
+  if(move > 0){
+    //move right one by one
+    for(int i = 1; i < move; i++){
+      if(test_collision(block, w, h, ref_col+i, ref_row)) return;
+    }
+    ref_col += move;
+  }else{
+    //move left one by one
+    for(int i = 1; i < move; i++){
+      if(test_collision(block, w, h, ref_col-i, ref_row)) return;
     }
   }
-  cur_row++;
+  ref_col += move;
 }
 
 void play(char ch, int sort_num, int start_col, int move) {
@@ -228,9 +258,7 @@ void play(char ch, int sort_num, int start_col, int move) {
   }
 
   fall(block, w, h, start_col, move);
-  dump();
-  elimiation();
-  dump();
+  delete_row();
 }
 
 void start() {
