@@ -170,28 +170,36 @@ void delete_row(){
         break;
       }
     }
-  }
-  if(full) {
-    if(dest_row == -1)
-      dest_row = row - i - 1;
-  } else {
-    if(dest_row != -1) {
-      int* dest = &gameboard[dest_row][0];
-      for(int j = 0; j < col; j++){
-        dest[j] = ptr[j];
-      }
+    if(full) {
+      if(dest_row == -1)
+        dest_row = row - i - 1;
+    } else {
+      if(dest_row != -1) {
+        int* dest = &gameboard[dest_row][0];
+        for(int j = 0; j < col; j++){
+          dest[j] = ptr[j];
+        }
       dest_row--;
+      } 
     }
   }
-
   // fill rest row
   while(dest_row>=0) {
-      int* dest = &gamebroad[dest_row][0];    
+      int* dest = &gameboard[dest_row][0];    
       for(int j=0;j<col;j++){
         dest[j] = 0;
       }
       dest_row--;
   }
+}
+
+void put_block(int*block, int h, int w, int ref_col, int ref_row) {
+    for(int i = 0; i < h; i++) {
+      for(int j = 0; j < w; j++) {
+        if(block[(3-i)*4+j])
+          gameboard[ref_row-i][ref_col+j] = block[(3-i)*4+j]; 
+      }
+    }
 }
 
 bool test_collision(int* block, int w, int h, int ref_col, int ref_row) {
@@ -229,7 +237,7 @@ void fall(int* block, int w, int h, int start_col, int move) {
         cout << "no space to put block" << endl;
         return;
       }
-    } else if(cur_row = =row-1) { // last row
+    } else if(cur_row == row-1) { // last row
         // valid on cur_row
         ref_col = start_col-1;
         ref_row = cur_row;
@@ -265,15 +273,6 @@ void fall(int* block, int w, int h, int start_col, int move) {
   }
    
   put_block(block, h, w, ref_col, ref_row);
-}
-
-void put_block(int*block, int h, int w, int ref_col, int ref_row) {
-    for(int i = 0; i < h; i++) {
-      for(int j = 0; j < w; j++) {
-        if(block[(3-i)*4+j])
-          gamebroad[ref_row-i][ref_col+j] = block[(3-i)*4+j]; 
-      }
-    }
 }
 
 void play(char ch, int sort_num, int start_col, int move) {
@@ -328,13 +327,6 @@ void start() {
     
     stringstream cmd(command[index]);
     cmd >> sort >> start_col >> move;
-
-    // for(int i = 0; i < 4; i++){
-    //   for(int j = 0; j < 4;j++){
-    //     blockbroad[i][j] = 0;
-    //   }
-    // }
-    // the row and column all start from index 1 and all blocks shall never step out of boundary.
     
     if(sort == "End")
       break;
