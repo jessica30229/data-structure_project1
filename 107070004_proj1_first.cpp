@@ -157,6 +157,27 @@ int O[4][4] = {
 int Oh[1] = { 2 };
 int Ow[1] = { 2 };
 
+// void dump()
+// {
+//   cout << "=================" << endl;
+//   // cout << "1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0" << endl;
+//   for(int i=0;i<row;i++){
+//     for(int j=0;j<col;j++){
+//       cout << gameboard[i][j] << " ";
+//     }
+//     cout << endl;
+//   }
+// }
+
+// void dump_block(int* block)
+// {
+//   for(int i=0;i<4;i++) {
+//     for(int j=0;j<4;j++){
+//       cout << block[i*4+j] << " ";
+//     }
+//     cout << endl;
+//   }
+// }
 
 void delete_row(){
   int dest_row = -1;
@@ -205,7 +226,7 @@ void put_block(int*block, int h, int w, int ref_col, int ref_row) {
 bool test_collision(int* block, int w, int h, int ref_col, int ref_row) {
     for(int i = 0; i < h; i++) {
       int* ptr = &gameboard[ref_row-i][ref_col];
-      int* bptr = &block[(3-i)*4]; //2-array -> 1-array
+      int* bptr = &block[(3-i)*4]; //2-dimension to 1
       for(int j = 0; j < w; j++) {
         if(bptr[j] && ptr[j]) {
           return true;
@@ -255,14 +276,14 @@ void fall(int* block, int w, int h, int start_col, int move) {
     ref_col += move;
   }else{
     //move left one by one
-    for(int i = 1; i < move; i++){
+    for(int i = 1; i < -move; i++){ //fix a bug
       if(test_collision(block, w, h, ref_col-i, ref_row)) return;
     }
     ref_col += move;
   }
   
   // try to move down if can
-  while(ref_row<row-1) {
+  while(ref_row < row-1) {
     // try next row
     collision = test_collision(block, w, h, ref_col, ref_row+1);
     if(collision) {
@@ -309,9 +330,14 @@ void play(char ch, int sort_num, int start_col, int move) {
     h = Ih[sort_num-1];
     w = Iw[sort_num-1];
   }
+  // printf("start=%d move=%d\n", start_col, move);
+  // dump_block(block);
+  // dump();
 
   fall(block, w, h, start_col, move);
+  // dump();
   delete_row();
+  // dump();
 }
 
 void start() {
@@ -326,13 +352,15 @@ void start() {
     int start_col, move;
     
     stringstream cmd(command[index]);
-    cmd >> sort >> start_col >> move;
-    
-    if(sort == "End")
-      break;
-    const char* ch = sort.c_str();
-    play(ch[0], ch[1]-'0', start_col, move);
-    //cout << "sort=" << sort << ", start=" << start_col << ", move=" << last_move << endl;
+    // try{
+      cmd >> sort >> start_col >> move;   
+      if(sort == "End")
+        break;
+      const char* ch = sort.c_str();
+      play(ch[0], ch[1]-'0', start_col, move);
+    // }catch(exit){
+      
+    // }
     index++;
   }
 }
