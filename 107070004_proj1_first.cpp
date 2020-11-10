@@ -249,7 +249,7 @@ void fall(int* block, int w, int h, int start_col, int move) {
     collision = test_collision(block, w, h, start_col - 1, cur_row);
     if(collision == true) {
       // put block on cur_row-1
-      if(cur_row >= h)
+      if(cur_row >= h) {
         // valid on cur_row-1
         ref_col = start_col-1;
         ref_row = cur_row-1;
